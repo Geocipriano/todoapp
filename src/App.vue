@@ -1,28 +1,98 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="insert">
+      <h3>{{title}}</h3>
+      <form>
+        <input type="text" id="newTodo" v-model="newTodo" v-on:submit.prevent="addTodo" />
+        <button v-on:click.prevent="addTodo" id="addTodo">Adicionar</button>
+      </form>
+      <button @click="allDone" class="allDone">Concluir Tarefas</button>
+    </div>
+    <div class="lista">
+      <ul v-for="todo in todos" :key="todo.title">
+        <li>
+          <input type="checkbox" v-model="todo.done" />
+          <span :class="{ done: todo.done }">{{todo.title}}</span>
+          <button @click="removeTodo(todo)">Remover</button>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: "App",
+  data() {
+    return {
+      title: "Lista de Tarefas",
+      newTodo: "",
+      todos: [],
+    };
+  },
+  methods: {
+    addTodo() {
+      this.todos.push({
+        title: this.newTodo,
+        done: false,
+      });
+      this.newTodo = "";
+    },
+    removeTodo(todo) {
+      const todoIndex = this.todos.indexOf(todo);
+      this.todos.splice(todoIndex, 1);
+    },
+    allDone() {
+      this.todos.forEach((todo) => {
+        todo.done = true;
+      });
+    },
+  },
+};
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.done {
+  text-decoration: line-through;
+}
+
+.insert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#newTodo {
+  width: 200px;
+}
+#addTodo {
+  width: 100px;
+}
+.allDone {
+  width: 310px;
+}
+.lista {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 300px;
+  margin: 15px auto;
+}
+.lista ul {
+  padding-inline-start: 0px;
+  margin: 5px;
+}
+.lista ul li {
+  display: flex;
+  justify-content: space-evenly;
+  list-style: none;
+  margin: 5 auto;
+  min-width: 300px;
 }
 </style>
